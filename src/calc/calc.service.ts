@@ -10,7 +10,6 @@ export class CalcService {
     }
 
     try {
-     
       const result = this.evaluateExpression(expression);
       return result;
     } catch (error) {
@@ -18,18 +17,18 @@ export class CalcService {
     }
   }
 
-  
   private isValidExpression(expression: string): boolean {
     const validPattern = /^[0-9+\-*/\s]+$/;
     return validPattern.test(expression);
   }
 
-  
   private evaluateExpression(expression: string): number {
-   
-    const tokens = expression.split(/\s+/);
-    // console.log('token', tokens);
-    
+    const tokens = expression.match(/\d+|\+|\-|\*|\//g);
+
+    if (!tokens) {
+      throw new Error('Invalid expression provided');
+    }
+
     const values: number[] = [];
     const operators: string[] = [];
 
@@ -40,10 +39,7 @@ export class CalcService {
         while (
           operators.length &&
           this.hasOperate(token, operators[operators.length - 1])
-          
-        )
-        
-        {
+        ) {
           const operator = operators.pop();
           const right = values.pop();
           const left = values.pop();
@@ -52,8 +48,7 @@ export class CalcService {
         operators.push(token);
       }
     }
-    // console.log('values', values);
-    // console.log('operators', operators);
+
     while (operators.length) {
       const operator = operators.pop();
       const right = values.pop();
@@ -64,7 +59,6 @@ export class CalcService {
     return values[0];
   }
 
-  
   private hasOperate(op1: string, op2: string): boolean {
     if ((op1 === '*' || op1 === '/') && (op2 === '+' || op2 === '-')) {
       return false;
