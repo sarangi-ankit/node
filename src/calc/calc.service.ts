@@ -65,8 +65,6 @@ export class CalcService {
     }
     return true;
   }
-
-  // Apply the operator to the operands
   private applyOperator(op: string, left: number, right: number): number {
     switch (op) {
       case '+':
