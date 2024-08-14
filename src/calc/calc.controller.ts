@@ -1,4 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { CalcService } from './calc.service';
 import { CalcDto } from './calc.dto';
 
@@ -8,9 +14,20 @@ export class CalcController {
 
   @Post('/')
   calc(@Body() calcBody: CalcDto) {
-    const result = this.calcService.calculateExpression(calcBody);
-    return {
-      result,
-    };
+    try {
+      const result = this.calcService.calculateExpression(calcBody);
+      return {
+        result,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: error.message,
+          error: 'Bad Request',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }
